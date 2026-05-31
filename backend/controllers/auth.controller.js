@@ -1,5 +1,7 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User } from "../models/user.model.js";
+import { generateTokenAndSetCookies } from "../utils/generateTokenAndSetCookies.js";
+// import
 
 export const signup = async (req, res) => {
   const { email, name, password } = req.body;
@@ -12,7 +14,7 @@ export const signup = async (req, res) => {
     if (doesUserExists) {
       res.status(400).json({ message: "The user already exists" });
     }
-    const hashedPassword = bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
     const verificationToken = Math.floor(Math.random() * 10000000);
 
     const user = new User({
@@ -25,7 +27,12 @@ export const signup = async (req, res) => {
 
     await user.save();
 
-    generateTokenAndSetCookies(res, user._id)
+    generateTokenAndSetCookies(res, user._id);
+
+    res.status(200).json({
+      message: `successfully created user`,
+      user: { name, email, password },
+    });
   } catch (error) {
     res
       .status(400)

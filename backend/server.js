@@ -11,7 +11,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 
-app.listen(process.env.PORT, () => {
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
   connectToDB();
-  console.log(`Listening on port ${process.env.PORT}`);
+  console.log(`Listening on port ${PORT}`);
 });
