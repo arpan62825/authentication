@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { User } from "../models/user.model.js";
 import { generateTokenAndSetCookies } from "../utils/generateTokenAndSetCookies.js";
+import { sendVerificationToken } from "../utils/sendVerificationToken.js";
 // import
 
 export const signup = async (req, res) => {
@@ -15,7 +16,7 @@ export const signup = async (req, res) => {
       res.status(400).json({ message: "The user already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 12);
-    const verificationToken = Math.floor(Math.random() * 10000000);
+    const verificationToken = Math.floor(Math.random() * 1000000);
 
     const user = new User({
       name,
@@ -28,6 +29,7 @@ export const signup = async (req, res) => {
     await user.save();
 
     generateTokenAndSetCookies(res, user._id);
+    await sendVerificationToken(res, user.email, verificationToken);
 
     res.status(200).json({
       message: `successfully created user`,
@@ -41,7 +43,19 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  res.send("login route should work in postman");
+  const { email, password } = req.body;
+  try {
+    const user = User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Enter a valid email" });
+    }
+
+    const isCorrectPassword = await bcrypt.compare(password, user.password);
+
+    if (!isCorrectPassword) {
+      return res.status(400).json();
+    }
+  } catch (error) {}
 };
 
 export const logout = async (req, res) => {
