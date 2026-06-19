@@ -23,15 +23,14 @@ const SignupPage = () => {
     });
 
     try {
-      axiosInstance.post("/auth/signup", data);
-      e.currentTarget.reset();
+      await axiosInstance.post("/auth/signup", data);
+
+      navigation.navigate("http://localhost:5173/verification");
     } catch (error) {
       console.log(
         `An error occurred while trying to send request to '/api/auth/signup': ${error}`,
       );
     }
-
-    // alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
   };
   return (
     <div className="flex justify-center items-center h-full">
@@ -51,7 +50,7 @@ const SignupPage = () => {
           }}
         >
           <Label className="text-white">Your Name</Label>
-          <Input placeholder="Enter your fullname" />
+          <Input placeholder="Enter your full name" />
           <FieldError />
         </TextField>
         {/* //EMAIL----------------------------- */}

@@ -90,7 +90,7 @@ export const verifyEmail = async (req, res) => {
     // todo => implement welcome email
     // await sendWelcomeEmail(user.name, user.email)
 
-    return res.status(200).json({ message: "Account has been verified" });
+    res.status(200).json({ message: "Account has been verified" });
   } catch (error) {
     console.log(
       `An error occurred while trying to verify the account: ${error}`,
