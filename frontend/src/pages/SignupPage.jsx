@@ -9,8 +9,10 @@ import {
   TextField,
 } from "@heroui/react";
 
+import axiosInstance from "../lib/axios";
+
 const SignupPage = () => {
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = {};
@@ -20,11 +22,39 @@ const SignupPage = () => {
       data[key] = value.toString();
     });
 
-    alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
+    try {
+      axiosInstance.post("/auth/signup", data);
+      e.currentTarget.reset();
+    } catch (error) {
+      console.log(
+        `An error occurred while trying to send request to '/api/auth/signup': ${error}`,
+      );
+    }
+
+    // alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
   };
   return (
     <div className="flex justify-center items-center h-full">
       <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
+        {/* //USER-NAME---------------------------- */}
+        <TextField
+          isRequired
+          maxLength={64}
+          name="name"
+          type="name"
+          validate={(value) => {
+            if (value.length > 64) {
+              return "Please enter your name using 64 characters or less";
+            }
+
+            return null;
+          }}
+        >
+          <Label className="text-white">Your Name</Label>
+          <Input placeholder="Enter your fullname" />
+          <FieldError />
+        </TextField>
+        {/* //EMAIL----------------------------- */}
         <TextField
           isRequired
           name="email"
@@ -41,7 +71,7 @@ const SignupPage = () => {
           <Input placeholder="john@example.com" />
           <FieldError />
         </TextField>
-
+        {/* //PASSWORD------------------------- */}
         <TextField
           isRequired
           minLength={8}
@@ -68,7 +98,6 @@ const SignupPage = () => {
           </Description>
           <FieldError />
         </TextField>
-
         <div className="flex gap-2">
           <Button type="submit">
             <Check />
