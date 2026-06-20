@@ -1,17 +1,10 @@
 import { Check } from "lucide-react";
-import {
-  Button,
-  Description,
-  FieldError,
-  Input,
-  Label,
-  Form,
-  TextField,
-} from "@heroui/react";
+import { Link, useNavigate } from "react-router";
 
-import axiosInstance from "../lib/axios";
+import axiosInstance from "../lib/axios.js";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -22,10 +15,29 @@ const SignupPage = () => {
       data[key] = value.toString();
     });
 
+    const { password } = data;
+
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      alert("Password must contain at least one number.");
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      alert("Password must contain at least one uppercase letter.");
+      return;
+    }
+
     try {
+      console.log(typeof data);
+      console.log(data);
       await axiosInstance.post("/auth/signup", data);
 
-      navigation.navigate("http://localhost:5173/verification");
+      navigate("/verification");
     } catch (error) {
       console.log(
         `An error occurred while trying to send request to '/api/auth/signup': ${error}`,
@@ -33,80 +45,104 @@ const SignupPage = () => {
     }
   };
   return (
-    <div className="flex justify-center items-center h-full">
-      <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
-        {/* //USER-NAME---------------------------- */}
-        <TextField
-          isRequired
-          maxLength={64}
-          name="name"
-          type="name"
-          validate={(value) => {
-            if (value.length > 64) {
-              return "Please enter your name using 64 characters or less";
-            }
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-700/50 bg-slate-900/70 p-8 shadow-2xl backdrop-blur-sm">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-white">Create your account</h1>
 
-            return null;
-          }}
-        >
-          <Label className="text-white">Your Name</Label>
-          <Input placeholder="Enter your full name" />
-          <FieldError />
-        </TextField>
-        {/* //EMAIL----------------------------- */}
-        <TextField
-          isRequired
-          name="email"
-          type="email"
-          validate={(value) => {
-            if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-              return "Please enter a valid email address";
-            }
-
-            return null;
-          }}
-        >
-          <Label className="text-white">Email</Label>
-          <Input placeholder="john@example.com" />
-          <FieldError />
-        </TextField>
-        {/* //PASSWORD------------------------- */}
-        <TextField
-          isRequired
-          minLength={8}
-          name="password"
-          type="password"
-          validate={(value) => {
-            if (value.length < 8) {
-              return "Password must be at least 8 characters";
-            }
-            if (!/[A-Z]/.test(value)) {
-              return "Password must contain at least one uppercase letter";
-            }
-            if (!/[0-9]/.test(value)) {
-              return "Password must contain at least one number";
-            }
-
-            return null;
-          }}
-        >
-          <Label className="text-white">Password</Label>
-          <Input placeholder="Enter your password" />
-          <Description>
-            Must be at least 8 characters with 1 uppercase and 1 number
-          </Description>
-          <FieldError />
-        </TextField>
-        <div className="flex gap-2">
-          <Button type="submit">
-            <Check />
-            Submit
-          </Button>
-          <Button type="reset" variant="secondary">
-            Reset
-          </Button>
+          <p className="mt-3 text-sm leading-relaxed text-slate-400">
+            Join us today and get started in just a few minutes.
+          </p>
         </div>
-      </Form>
+        <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
+          <div>
+            <label
+              htmlFor="name"
+              className="mb-2 block text-sm font-medium text-slate-300"
+            >
+              Your Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              maxLength={64}
+              placeholder="Enter your full name"
+              required
+              className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium text-slate-300"
+            >
+              Email address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="john@example.com"
+              required
+              className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-300"
+              >
+                Password
+              </label>
+              <span className="text-xs text-slate-500">8+ characters</span>
+            </div>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              minLength={8}
+              placeholder="Enter your password"
+              required
+              className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-blue-500"
+            />
+
+            <p className="mt-2 text-xs text-slate-500">
+              Must include at least one uppercase letter and one number.
+            </p>
+          </div>
+
+          <div className="mt-2 flex gap-3">
+            <button
+              type="submit"
+              className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+            >
+              <Check size={18} />
+              Create Account
+            </button>
+
+            <button
+              type="reset"
+              className="rounded-xl border border-slate-700 bg-slate-800 px-5 py-3 font-medium text-slate-300 transition hover:bg-slate-700"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+        <div className="mt-6 text-center text-sm text-slate-400">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-blue-400 transition-colors hover:text-blue-300"
+          >
+            Sign in
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

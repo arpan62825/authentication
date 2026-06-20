@@ -10,11 +10,13 @@ export const sendPasswordResetEmail = async (
   token,
   tokenExpiresAt,
 ) => {
-  if (Date.now() > tokenExpiresAt) {
-    return res
-      .status(400)
-      .json({ message: "The password reset token has expired" });
-  }
+  // if (Date.now() > tokenExpiresAt) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "The password reset token has expired" });
+  // }
+
+  //! THE ABOVE CODE IS USELESS
 
   const { data, error } = await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",

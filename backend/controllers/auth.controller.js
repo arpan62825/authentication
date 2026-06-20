@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
 
     const doesUserExists = await User.findOne({ email });
     if (doesUserExists) {
-      res.status(400).json({ message: "The user already exists" });
+      return res.status(400).json({ message: "The user already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 12);
     const verificationToken = Math.floor(Math.random() * 1000000);
@@ -34,12 +34,12 @@ export const signup = async (req, res) => {
     generateTokenAndSetCookies(res, user._id);
     await sendVerificationToken(res, user.email, verificationToken);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: `successfully created user`,
       user: { name, email, password },
     });
   } catch (error) {
-    res
+    return res
       .status(400)
       .json({ message: `An error occurred while fetching the user: ${error}` });
   }
