@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
 
     //* WHEN SETTING JUST THE TYPE NO NEED TO USE OBJECT
     resetPasswordToken: String,
-    resetPasswordExpiresAt: Date,
+    resetPasswordTokenExpiresAt: Date,
     verificationToken: String,
     verificationTokenExpiresAt: Date,
   },
