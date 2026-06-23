@@ -15,8 +15,6 @@ export const sendVerificationToken = async (res, email, verificationToken) => {
   if (error) {
     return res.status(400).json({ error });
   }
-
-  res.status(200).json({ data });
 };
 
 //* THE ABOVE CODE WILL NOT WORK, SINCE "RESEND" REQUIRES US TO USE OUR OWN VERIFIED EMAIL TO DELIVER MAILS

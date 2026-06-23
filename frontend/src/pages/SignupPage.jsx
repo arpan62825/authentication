@@ -116,20 +116,13 @@ const SignupPage = () => {
             </p>
           </div>
 
-          <div className="mt-2 flex gap-3">
+          <div className="mt-2 flex gap-3 justify-center">
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+              className="flex items-center justify-center gap-2 rounded-xl w-full bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
             >
               <Check size={18} />
               Create Account
-            </button>
-
-            <button
-              type="reset"
-              className="rounded-xl border border-slate-700 bg-slate-800 px-5 py-3 font-medium text-slate-300 transition hover:bg-slate-700"
-            >
-              Reset
             </button>
           </div>
         </form>

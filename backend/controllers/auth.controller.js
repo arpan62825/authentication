@@ -58,6 +58,8 @@ export const login = async (req, res) => {
     if (!isCorrectPassword) {
       return res.status(400).json();
     }
+
+    res.status(200).json({message: "User is successfully logged in"})
   } catch (error) {
     console.log(`An error occurred while trying to login: ${error}`);
   }
@@ -104,7 +106,7 @@ export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res
+      return res
         .status(400)
         .json({ message: "The provided email does not exist in the database" });
     }
@@ -116,7 +118,7 @@ export const forgotPassword = async (req, res) => {
 
     user.resetPasswordToken = resetToken;
     user.resetPasswordTokenExpiresAt = Date.now() + 10 * 60 * 1000; // 10 mins
-    user.save();
+    await user.save();
 
     res.status(200).json({ message: "Password was successfully reset" });
   } catch (error) {
@@ -145,12 +147,31 @@ export const resetPassword = async (req, res) => {
     user.password = hashedPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiresAt = undefined;
-    user.save();
+    await user.save();
 
     res.status(200).json({ message: "Successfully reset password" });
   } catch (error) {
     console.log(
       `An error occurred while trying to reset the password: ${error}`,
     );
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.log(
+      `An error occurred while trying to find user with their ID: ${error}`,
+    );
+    res.status(400).json({
+      message: error.message,
+    });
   }
 };

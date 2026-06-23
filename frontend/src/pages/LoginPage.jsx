@@ -12,8 +12,8 @@ const LoginPage = () => {
           <h1 className="text-3xl font-bold text-white">Welcome back</h1>
 
           <p className="mt-3 text-sm leading-relaxed text-slate-400">
-            Sign in to access your account, manage your preferences, and pick
-            up where you left off.
+            Sign in to access your account, manage your preferences, and pick up
+            where you left off.
           </p>
         </div>
 
@@ -44,12 +44,14 @@ const LoginPage = () => {
                 Password
               </label>
 
-              <button
-                type="button"
-                className="text-sm text-blue-400 transition-colors hover:text-blue-300"
-              >
-                Forgot password?
-              </button>
+              <Link to={`../forgot-password`}>
+                <button
+                  type="button"
+                  className="text-sm text-blue-400 transition-colors hover:text-blue-300 cursor-pointer"
+                >
+                  Forgot password?
+                </button>
+              </Link>
             </div>
 
             <input
@@ -70,7 +72,7 @@ const LoginPage = () => {
         </form>
 
         <div className="mt-6 text-center text-sm text-slate-400">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link
             to="/signup"
             className="font-medium text-blue-400 transition-colors hover:text-blue-300"

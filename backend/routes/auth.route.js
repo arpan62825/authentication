@@ -6,9 +6,13 @@ import {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  checkAuth,
 } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const route = Router();
+
+route.get("/check-auth", verifyToken, checkAuth);
 
 route.post("/signup", signup);
 
@@ -20,6 +24,6 @@ route.post("/verify-email", verifyEmail);
 
 route.post("/forgot-password", forgotPassword);
 
-route.post("/reset-password/:token", resetPassword)
+route.post("/reset-password/:token", resetPassword);
 
 export default route;
